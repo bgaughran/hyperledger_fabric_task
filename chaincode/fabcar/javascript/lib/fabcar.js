@@ -2,7 +2,7 @@
 'use strict';
 
 //array of allowable projects to donate to
-const projectNames = ["IrishRedCross", "DisasterServicesCorporation", "StVincentDePaul"];
+const projectNames = ["IrishRedCross", "DisasterServicesCorporation", "StVincentsDePaul"];
 
 //array of allowable item types to donate
 const itemTypes = ["Electricity", "Gas", "Groceries", "Cash"];
@@ -76,6 +76,9 @@ class ManageDonations extends Contract {
             console.log('Adding an amount of ' + amount + ' to the existing donation total of ' + donation.amount);
             donation.amount = this.incrementDonation(donation.amount, amount);
 
+            console.log('Updating timestamp');
+            donation.lastDonationTimeInMilliseconds = Date.now();
+
             await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
         }
 
@@ -90,8 +93,8 @@ class ManageDonations extends Contract {
     }
 
     isValidItemType(itemType) {
-         //TODO: need to add error handling?
-       return itemTypes.includes(itemType);
+        //TODO: need to add error handling?
+        return itemTypes.includes(itemType);
     }
 
     isValidAmount(amount) {
@@ -110,7 +113,6 @@ class ManageDonations extends Contract {
      * Determine if the donation value returned indicates that the associated key exists
      */
     keyExists(donationAsBytes){
-
         if (!donationAsBytes || donationAsBytes.length === 0) {
             return false;
         }
@@ -137,12 +139,15 @@ class ManageDonations extends Contract {
     createDonationValueObject(projectName, itemType, amount){
         //TODO: need to add error handling?
 
+        var lastDonationTimeInMilliseconds = Date.now();
+
         //TODO: use 'const' here?
         const donation =  {
             docType: 'donation',
             projectName,
             itemType,
             amount,
+            lastDonationTimeInMilliseconds
         };
 
         return donation;
