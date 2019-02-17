@@ -40,15 +40,20 @@ class ManageDonations extends Contract {
 
         console.info('============= START : addDonation ===========');
 
-        //TODO: add call to a method to verify the project name
         if (!this.isValidProject(projectName)){
             console.log('Cannot add a donation to a project that does not exist: ' + projectName)
             throw new Error(`${projectName} does not exist`);
         }
 
-        //TODO: add call to a method to verify the item type
+        if (!this.isValidItemType(itemType)){
+            console.log('Cannot add a donation to an item type that does not exist: ' + itemType)
+            throw new Error(`${itemType} does not exist`);
+        }
 
-        //TODO: add call to a method to verify the amount is a valid monetary amount (i.e. integer greater than zero)
+        if (!this.isValidAmount(amount)){
+            console.log('Cannot add a donation with an invalid amount: ' + amount)
+            throw new Error(`${amount} is an invalid amount`);
+        }
 
         var key = this.createKey(projectName, itemType);
 
@@ -80,7 +85,18 @@ class ManageDonations extends Contract {
     }
 
     isValidProject(projectName) {
+        //TODO: need to add error handling?
         return projectNames.includes(projectName);
+    }
+
+    isValidItemType(itemType) {
+         //TODO: need to add error handling?
+       return itemTypes.includes(itemType);
+    }
+
+    isValidAmount(amount) {
+         //TODO: need to add error handling?
+       return Number(amount) > 0;
     }
 
     /*
