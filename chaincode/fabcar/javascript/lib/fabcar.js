@@ -1,11 +1,11 @@
 //ensures the Javascript is executed in strict mode
 'use strict';
 
-//array of allowable item types to donate
-const itemTypes = ["Electricity", "Gas", "Groceries", "Cash"];
-
 //array of allowable projects to donate to
 const projectNames = ["IrishRedCross", "DisasterServicesCorporation", "StVincentDePaul"];
+
+//array of allowable item types to donate
+const itemTypes = ["Electricity", "Gas", "Groceries", "Cash"];
 
 //Fabric smart contract class
 const { Contract } = require('fabric-contract-api');
@@ -41,23 +41,65 @@ class ManageDonations extends Contract {
         console.info('============= START : addDonation ===========');
 
         //TODO: add call to a method to verify the project name
+        if (!this.isValidProject(projectName)){
+            console.log('Cannot add a donation to a project that does not exist: ' + projectName)
+            throw new Error(`${projectName} does not exist`);
+        }
 
         //TODO: add call to a method to verify the item type
 
         //TODO: add call to a method to verify the amount is a valid monetary amount (i.e. integer greater than zero)
 
-        //TODO: add a call to add the donation to the ledger
-            //TODO: first get the current balance for the projectName & itemType
-            //TODO: then add to it
+        var key = this.createKey(projectName, itemType);
 
-        var key = createKey(projectName, itemType);
-        var donationValue = createDonationValue(projectName, itemType, amount);
+        /*
+            Add to the existing donations if the key (project / item) exists.
+            Otherwise, create the first donation for the key (project / item)
+        */
+        const donationAsBytes = await ctx.stub.getState(key); // get the donation from chaincode state
+        if (!this.keyExists(donationAsBytes)){
+            console.log('Key does not exist: ' + key)
 
-        await ctx.stub.putState(key, Buffer.from(JSON.stringify(donationValue)));
+            console.log('Creating a new project & item type key/value of value = ' +key);
+            var donation = this.createDonationValueObject(projectName, itemType, amount);
+            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
+
+        } else {
+            console.log('Key exists: ' + key)
+            const donation = JSON.parse(donationAsBytes.toString());
+
+            console.log('Adding an amount of ' + amount + ' to the existing donation total of ' + donation.amount);
+            donation.amount = this.incrementDonation(donation.amount, amount);
+
+            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
+        }
 
         //TODO: need to ensure we include a timestamp in the transaction
 
         console.info('============= END : addDonation ===========');
+    }
+
+    isValidProject(projectName) {
+        return projectNames.includes(projectName);
+    }
+
+    /*
+     * Increment the amount by the donated amount
+     */
+    incrementDonation(currentAmount, amountToIncrement){
+        return Number(currentAmount) + Number(amountToIncrement);
+    }
+
+    /*
+     * Determine if the donation value returned indicates that the associated key exists
+     */
+    keyExists(donationAsBytes){
+
+        if (!donationAsBytes || donationAsBytes.length === 0) {
+            return false;
+        }
+
+        return true;
     }
 
     /*
@@ -67,7 +109,7 @@ class ManageDonations extends Contract {
      * The state key allows us to uniquely identify a donation
      * TODO: as an improvement, it might be useful in the future to use the 'createCompositeKey' to allow each the project & itemType to be independantly searchable
      */
-    function createKey(projectName, itemType){
+    createKey(projectName, itemType){
         //TODO: need to add error handling?
         return projectName + itemType;
     }
@@ -75,23 +117,26 @@ class ManageDonations extends Contract {
     /*
      * Create the donation value object to use in ledger transaction
      */
-    function createDonationValue(projectName, itemType){
+    //TODO: come up with better function name
+    createDonationValueObject(projectName, itemType, amount){
         //TODO: need to add error handling?
 
         //TODO: use 'const' here?
-        return donation = {
+        const donation =  {
             docType: 'donation',
             projectName,
             itemType,
             amount,
         };
 
+        return donation;
     }
+
 
     async getDonation(ctx, projectName, itemType) {
         console.log('Called getDonationsForProject');
 
-        var key = createKey(projectName, itemType);
+        var key = this.createKey(projectName, itemType);
         const donationAsBytes = await ctx.stub.getState(key);
 
         if (!donationAsBytes || donationAsBytes.length === 0) {
