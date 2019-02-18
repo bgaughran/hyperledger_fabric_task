@@ -1,4 +1,4 @@
-const ManageDonations  = require('./fabcar.js');
+const ManageDonations  = require('../chaincode/fabcar/javascript/lib/fabcar.js');
 const { ChaincodeMockStub, Transform } = require('@theledger/fabric-mock-stub');
 
 //add ability to use Chai framework for assertions
