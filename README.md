@@ -84,9 +84,6 @@ Note: I could not find anything native within HyperLedger Fabric to provide a mo
 - `npm install --global chai` installs Chai framework for running unit tests assertions
 - `brew install yarn` installs yarn for ChaincodeMockStub dependency
 - `yarn add @theledger/fabric-mock-stub --dev` installs the ChaincodeMockStub dependency. Note: install this in the directory running the tests
-    TODO: FIX....or explain that I installed this in an ugly way in the lib directory for speed, but it should live really in a different folder
-
-TODO: FIX BUG WITH HOW I CANNOT CALL THE CODE WITHOUT MODIFYING THE CONTRACT
 
 ### Running the unit tests
 TODO: Explain how to run the automated tests for this system
