@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@theledger/fabric-mock-stub": "^4.0.0"
+  }
+}

@@ -29,6 +29,9 @@ Follow good GIT practice to separate the development of each unit test.
 
 These instructions will get you a copy of the project up and running on your local machine for demo & testing purposes
 
+### 
+TODO: highlight the main files for review? fabcar, test-fabcar, README.md, startFabric.sh
+
 ### Prerequisites - Things you need to install the HyperLedger Fabric environment
 
 - install homebrew and check version using `brew -v`
@@ -69,7 +72,7 @@ These instructions will get you a copy of the project up and running on your loc
 - open a terminal to tail the logs of the chaincode installed in your docker image
     `docker ps` shows thew docker instances. Choose the ID running your chaincode, eg: af7cd027a5f2
     `docker logs af7cd027a5f -f` will tail the logs
-TODO: show the current donations (first call should show no donations)
+TODO: show the current donations (first call should show no donations)....and show how to call script show ledger output
 TODO: show adding a donation
 TODO: show the added donation
 
@@ -83,12 +86,11 @@ Note: I could not find anything native within HyperLedger Fabric to provide a mo
 - `npm install --global mocha` installs Mocha framework for running unit tests
 - `npm install --global chai` installs Chai framework for running unit tests assertions
 - `brew install yarn` installs yarn for ChaincodeMockStub dependency
-- `yarn add @theledger/fabric-mock-stub --dev` installs the ChaincodeMockStub dependency. Note: install this in the directory running the tests
+- `cd tests` & run `yarn add @theledger/fabric-mock-stub --dev` installs the ChaincodeMockStub dependency. Note: install this in the directory running the tests
 
 ### Running the unit tests
-TODO: Explain how to run the automated tests for this system
-- run `mocha test-fabcar.js`
-
+- run `mocha tests/test-fabcar.js`
+TODO: show output of the tests here
 
 ## Built With
 TODO:....
