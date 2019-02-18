@@ -21,6 +21,7 @@
         "fabric-shim": "~1.4.0"
     },
     "devDependencies": {
+        "@theledger/fabric-mock-stub": "^4.0.0",
         "chai": "^4.1.2",
         "eslint": "^4.19.1",
         "mocha": "^5.2.0",

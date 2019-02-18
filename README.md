@@ -59,6 +59,7 @@ These instructions will get you a copy of the project up and running on your loc
 - `docker network prune` - clears any cached networks
 - `docker rmi dev-peer0.org1.example.com-fabcar-1.0-5c906e402ed29f20260ae42283216aa75549c571e2e380f3615826365d8269ba` - clears out old chaincode
 - `./startFabric.sh  javascript`- starts our Blockchain network and install and instantiate a NodeJS/GoLang version of the FabCar smart contract which will be used by our application to access the ledger
+- `npm install grpc@1.14.2`  (in directory with package.json)
 - `npm install` (in directory with package.json)
 - `docker logs -f ca.example.com` - this creates a log of our Certificate authority example (logs requests and responses to the cert authority)
 - `node enrollAdmin.js` - creates the admin user that can create users that can interact with the ledger. Note: it creates a directory called ‘wallet/admin’ with the user, public & private key. Every time we send a transaction to the ledger, the keys here will be used to sign those transactions to be considered valid on the blockchain. Once signed, the info will be sent to the chaincode, the chaincode will sign it with the correct info and then the Ledger will accept the transaction
@@ -72,8 +73,24 @@ TODO: show the current donations (first call should show no donations)
 TODO: show adding a donation
 TODO: show the added donation
 
-## Running the unit tests
+## Unit tests
+To ensure I could write unit tests of the 'addDonation' function in the chaincode, I used a Mock implementation of the 
+fabric-shim stub [from this GitHub repository](https://github.com/wearetheledger/fabric-mock-stub) called ChaincodeMockStub.
+
+Note: I could not find anything native within HyperLedger Fabric to provide a mock of 'fabric-shim'
+
+### Installing the unit tests dependencies
+- `npm install --global mocha` installs Mocha framework for running unit tests
+- `npm install --global chai` installs Chai framework for running unit tests assertions
+- `brew install yarn` installs yarn for ChaincodeMockStub dependency
+- `yarn add @theledger/fabric-mock-stub --dev` installs the ChaincodeMockStub dependency. Note: install this in the directory running the tests
+    TODO: FIX....or explain that I installed this in an ugly way in the lib directory for speed, but it should live really in a different folder
+
+TODO: FIX BUG WITH HOW I CANNOT CALL THE CODE WITHOUT MODIFYING THE CONTRACT
+
+### Running the unit tests
 TODO: Explain how to run the automated tests for this system
+- run `mocha test-fabcar.js`
 
 
 ## Built With

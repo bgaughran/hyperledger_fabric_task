@@ -17,6 +17,10 @@ const { Contract } = require('fabric-contract-api');
 //TODO: consider splitting this into smaller files if its too big (as per Dr Bob guidelines) - see https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/lib/papercontract.js
 class ManageDonations extends Contract {
 
+    constructor(){
+        super();
+    }
+
     /**
      * Instantiate to perform any setup of the ledger that might be required.
      * @param {Context} ctx the transaction context
@@ -61,13 +65,13 @@ class ManageDonations extends Contract {
             Add to the existing donations if the key (project / item) exists.
             Otherwise, create the first donation for the key (project / item)
         */
-        const donationAsBytes = await ctx.stub.getState(key); // get the donation from chaincode state
+        const donationAsBytes = await ctx.getState(key); // get the donation from chaincode state
         if (!this.keyExists(donationAsBytes)){
             console.log('Key does not exist: ' + key)
 
             console.log('Creating a new project & item type key/value of value = ' +key);
             var donation = this.createDonationValueObject(projectName, itemType, amount);
-            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
+            await ctx.putState(key, Buffer.from(JSON.stringify(donation)));
 
         } else {
             console.log('Key exists: ' + key)
@@ -79,7 +83,7 @@ class ManageDonations extends Contract {
             console.log('Updating timestamp');
             donation.lastDonationTimeInMilliseconds = Date.now();
 
-            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
+            await ctx.putState(key, Buffer.from(JSON.stringify(donation)));
         }
 
         //TODO: need to ensure we include a timestamp in the transaction
@@ -125,11 +129,11 @@ class ManageDonations extends Contract {
      *
      * By design, the 'key' for the state will be a combination of properties that uniquely identify it in a given context - in this case the 'projectName' and 'amount'
      * The state key allows us to uniquely identify a donation
-     * TODO: as an improvement, it might be useful in the future to use the 'createCompositeKey' to allow each the project & itemType to be independantly searchable
+     * TODO: as an improvement, it might be useful in the future to use the 'createCompositeKey' to allow each the project & itemType to be independently searchable
      */
     createKey(projectName, itemType){
         //TODO: need to add error handling?
-        return projectName + itemType;
+        return projectName + ':' + itemType;
     }
 
     /*
@@ -155,10 +159,10 @@ class ManageDonations extends Contract {
 
 
     async getDonation(ctx, projectName, itemType) {
-        console.log('Called getDonationsForProject');
+        console.log('Called getDonation');
 
         var key = this.createKey(projectName, itemType);
-        const donationAsBytes = await ctx.stub.getState(key);
+        const donationAsBytes = await ctx.getState(key);
 
         if (!donationAsBytes || donationAsBytes.length === 0) {
             throw new Error(`${key} does not exist`);
