@@ -11,7 +11,7 @@ const chaincode = new ManageDonations();
 
 describe('Test ManageDonations', () => {
 
-    it("Should be able to add donation", async () => {
+    it("Should be able to add & get a donation", async () => {
         const stub = new ChaincodeMockStub("MyMockStub", chaincode);
 
         //set up the mock
@@ -36,7 +36,16 @@ describe('Test ManageDonations', () => {
 
     });
 
+    it("Should be able to create a key correctly", async () => {
+        const stub = new ChaincodeMockStub("MyMockStub", chaincode);
+
+        actualKey = chaincode.createKey('DisasterServicesCorporation', 'Gas');
+        expect(actualKey).to.equal('DisasterServicesCorporation:Gas');
+
+    });
 });
 
 //TODO:add test for all methods
+
+//TODO:check Mocha best practices for test layout
 
