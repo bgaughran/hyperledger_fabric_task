@@ -51,6 +51,9 @@ async function main() {
         result = await contract.evaluateTransaction('getDonation', 'DisasterServicesCorporation', 'Cash');
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
+        result = await contract.evaluateTransaction('getDonation', 'DisasterServicesCorporation', 'Gas');
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         process.exit(1);
