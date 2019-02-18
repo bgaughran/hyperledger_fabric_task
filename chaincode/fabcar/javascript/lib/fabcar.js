@@ -75,7 +75,7 @@ class ManageDonations extends Contract {
 
         } else {
             console.log('Key exists: ' + key)
-            const donation = JSON.parse(donationAsBytes.toString());
+            var donation = JSON.parse(donationAsBytes.toString());
 
             console.log('Adding an amount of ' + amount + ' to the existing donation total of ' + donation.amount);
             donation.amount = this.incrementDonation(donation.amount, amount);
@@ -132,7 +132,7 @@ class ManageDonations extends Contract {
      * TODO: as an improvement, it might be useful in the future to use the 'createCompositeKey' to allow each the project & itemType to be independently searchable
      */
     createKey(projectName, itemType){
-        //TODO: need to add error handling?
+        //NOTE: no validation added here given that the chaincode author defines the key elements
         return projectName + ':' + itemType;
     }
 
@@ -141,12 +141,12 @@ class ManageDonations extends Contract {
      */
     //TODO: come up with better function name
     createDonationValueObject(projectName, itemType, amount){
-        //TODO: need to add error handling?
+        //NOTE: no validation added here given that the chaincode author defines the key elements
 
         var lastDonationTimeInMilliseconds = Date.now();
 
         //TODO: use 'const' here?
-        const donation =  {
+        var donation =  {
             docType: 'donation',
             projectName,
             itemType,
@@ -162,7 +162,7 @@ class ManageDonations extends Contract {
         console.log('Called getDonation');
 
         var key = this.createKey(projectName, itemType);
-        const donationAsBytes = await ctx.getState(key);
+        var donationAsBytes = await ctx.getState(key);
 
         if (!donationAsBytes || donationAsBytes.length === 0) {
             throw new Error(`${key} does not exist`);
