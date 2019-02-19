@@ -65,13 +65,13 @@ class ManageDonations extends Contract {
             Add to the existing donations if the key (project / item) exists.
             Otherwise, create the first donation for the key (project / item)
         */
-        const donationAsBytes = await ctx.getState(key); // get the donation from chaincode state
+        const donationAsBytes = await ctx.stub.getState(key); // get the donation from chaincode state
         if (!this.isKeyValid(donationAsBytes)){
             console.log('Key does not exist: ' + key)
 
             console.log('Creating a new project & item type key/value of value = ' +key);
             var donation = this.createDonationValueObject(projectName, itemType, amount);
-            await ctx.putState(key, Buffer.from(JSON.stringify(donation)));
+            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
 
         } else {
             console.log('Key exists: ' + key)
@@ -83,7 +83,7 @@ class ManageDonations extends Contract {
             console.log('Updating timestamp');
             donation.lastDonationTimeInMilliseconds = Date.now();
 
-            await ctx.putState(key, Buffer.from(JSON.stringify(donation)));
+            await ctx.stub.putState(key, Buffer.from(JSON.stringify(donation)));
         }
 
         console.info('============= END : addDonation ===========');
@@ -155,7 +155,7 @@ class ManageDonations extends Contract {
         console.log('Called getDonation');
 
         var key = this.createKey(projectName, itemType);
-        var donationAsBytes = await ctx.getState(key);
+        var donationAsBytes = await ctx.stub.getState(key);
 
         if (!donationAsBytes || donationAsBytes.length === 0) {
             throw new Error(`${key} does not exist`);

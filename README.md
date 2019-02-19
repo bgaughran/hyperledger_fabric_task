@@ -92,9 +92,14 @@ These instructions will get you  the project up and running on your local machin
 - open a terminal to tail the logs of the chaincode installed in your docker image
     `docker ps` shows thew docker instances. Choose the ID running your chaincode, eg: `af7cd027a5f2`
     `docker logs af7cd027a5f -f` will tail the logs
-TODO: show the current donations (first call should show no donations)....and show how to call script show ledger output
-TODO: show adding a donation
-TODO: show the added donation
+- run `cd fabcar/javascript`
+- run `node query.js` to show an empty ledger at the start
+- run `node invoke.js` to add a donation
+- run `node query.js` to show the updated ledger
+- run `node invoke.js` to add a 2nd donation donation
+- run `node query.js` to show the updated donation for the same project and item type and updated timestamp
+- see screen print below for evidence of the demo being ran....
+![Screen shot of demo output](demo_output.png)
 
 ## Unit tests
 The chain code has FULL code coverage with effective unit tests :)
@@ -118,7 +123,7 @@ fabric-shim stub [from this GitHub repository](https://github.com/wearetheledger
 - `cd tests` & run `yarn add @theledger/fabric-mock-stub --dev` installs the ChaincodeMockStub dependency. Note: install this in the directory running the tests
 
 ### Running the unit tests
-- run `mocha tests/test-fabcar.js`
+- run `mocha tests/test-fabcar.js`. Output of my tests can be seen here...
 ![Screen shot of unit tests output](unit_tests_output.png)
 
 ## Future improvements to chaincode
