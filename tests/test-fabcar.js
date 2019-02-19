@@ -62,11 +62,11 @@ describe('Test ManageDonations', function(){
             //verify the key does not exist
 //            const actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
 //            expect(Transform.bufferToObject(actualDonation)).to.be.null;
-
-            //now verify our chaincode creates one
+//
+//            //now verify our chaincode creates one
 //            await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
 //            actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
-//            expect(Transform.bufferToObject(actualDonation)).to.be.null;
+//            expect(Transform.bufferToObject(actualDonation)).not.to.be.null;
 
 
 //            expect(getDonationFunction).to.throw(Error);
@@ -83,10 +83,7 @@ describe('Test ManageDonations', function(){
 
     });
 
-    //todo: check expected errors thrown in getDonation (and test getDonation explicitly)
-
     describe('Test ManageDonations - helper methods', () => {
-        //todo: test rest of helper methods
 
         it("Should be able to check a key is valid", async () => {
 
@@ -106,6 +103,50 @@ describe('Test ManageDonations', function(){
             const actualKey = chaincode.createKey('DisasterServicesCorporation', 'Gas');
             expect(actualKey).to.equal('DisasterServicesCorporation:Gas');
 
+        });
+
+        it("Should be able to validate a project", async () => {
+
+            expect(chaincode.isValidProject('DisasterServicesCorporation')).to.true;
+            expect(chaincode.isValidProject('BAD_PROJECT_NAME')).to.false;
+            expect(chaincode.isValidProject('')).to.false;
+            expect(chaincode.isValidProject()).to.false;
+            expect(chaincode.isValidProject(null)).to.false;
+
+        });
+
+        it("Should be able to validate an item", async () => {
+
+            expect(chaincode.isValidItemType('Electricity')).to.true;
+            expect(chaincode.isValidItemType('BAD_ITEM_TYPW')).to.false;
+            expect(chaincode.isValidItemType('')).to.false;
+            expect(chaincode.isValidItemType()).to.false;
+            expect(chaincode.isValidItemType(null)).to.false;
+
+        });
+
+        it("Should be able to validate an amount", async () => {
+
+            expect(chaincode.isValidAmount(1)).to.true;
+            expect(chaincode.isValidAmount(99999999)).to.true;
+            expect(chaincode.isValidAmount('')).to.false;
+            expect(chaincode.isValidAmount()).to.false;
+            expect(chaincode.isValidAmount(null)).to.false;
+            expect(chaincode.isValidAmount(0)).to.false;
+            expect(chaincode.isValidAmount(-1)).to.false;
+            expect(chaincode.isValidAmount(-0000000)).to.false;
+
+        });
+
+        it("Should be able to increment the donation", async () => {
+
+            expect(chaincode.incrementDonation(1,2)).to.equal(3);
+            expect(chaincode.incrementDonation(2,1)).to.equal(3);
+            expect(chaincode.incrementDonation(-1,1)).to.equal(0);
+            expect(chaincode.incrementDonation(1,-1)).to.equal(0);
+            expect(chaincode.incrementDonation()).to.be.NaN;
+            expect(chaincode.incrementDonation('', 1)).to.equal(1);
+            expect(chaincode.incrementDonation(1, '')).to.equal(1);
         });
 
         it("Should be able to create a value object correctly", async () => {
