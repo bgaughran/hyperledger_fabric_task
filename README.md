@@ -80,7 +80,13 @@ TODO: show the added donation
 To ensure I could write unit tests of the 'addDonation' function in the chaincode, I used a Mock implementation of the 
 fabric-shim stub [from this GitHub repository](https://github.com/wearetheledger/fabric-mock-stub) called ChaincodeMockStub.
 
-Note: I could not find anything native within HyperLedger Fabric to provide a mock of 'fabric-shim'
+ - Note 1: I could not find anything native within HyperLedger Fabric to provide a mock of 'fabric-shim'
+ - **Note 2: unfortunately, due to what appears to be a small compatability issue, to get the tests to run,
+ you have to make a minor modification to the chaincode source. I suspect this is due to a compatibility issue with the Mock code libraries.
+ Once the following changes are made, the tests run fun:
+ Replace all 4 instances of the source code from `ctx.stub` to `ctx` to ensure the tests run successfully. 
+ Obviously, this would not be acceptable in a 'real' development situation and another
+ solution would be required, for example a change to the `ChaincodeMockStub` source:**
 
 ### Installing the unit tests dependencies
 - `npm install --global mocha` installs Mocha framework for running unit tests
