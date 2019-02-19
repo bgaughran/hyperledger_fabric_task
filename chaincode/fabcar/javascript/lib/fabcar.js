@@ -90,17 +90,14 @@ class ManageDonations extends Contract {
     }
 
     isValidProject(projectName) {
-        //TODO: need to add error handling?
         return projectNames.includes(projectName);
     }
 
     isValidItemType(itemType) {
-        //TODO: need to add error handling?
         return itemTypes.includes(itemType);
     }
 
     isValidAmount(amount) {
-         //TODO: need to add error handling?
        return Number(amount) > 0;
     }
 
@@ -108,7 +105,6 @@ class ManageDonations extends Contract {
      * Increment the amount by the donated amount
      */
     incrementDonation(currentAmount, amountToIncrement){
-       //TODO: add validation
        return Number(currentAmount) + Number(amountToIncrement);
     }
 
