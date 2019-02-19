@@ -14,9 +14,9 @@ const { Contract } = require('fabric-contract-api');
  *  Smart Contract to manage donations to be spent on a particular item
  *  @extends Contract
  */
-//TODO: consider splitting this into smaller files if its too big (as per Dr Bob guidelines) - see https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/lib/papercontract.js
 class ManageDonations extends Contract {
 
+    //constructor required to enable unit testing
     constructor(){
         super();
     }
@@ -66,7 +66,7 @@ class ManageDonations extends Contract {
             Otherwise, create the first donation for the key (project / item)
         */
         const donationAsBytes = await ctx.getState(key); // get the donation from chaincode state
-        if (!this.keyExists(donationAsBytes)){
+        if (!this.isKeyValid(donationAsBytes)){
             console.log('Key does not exist: ' + key)
 
             console.log('Creating a new project & item type key/value of value = ' +key);
@@ -85,8 +85,6 @@ class ManageDonations extends Contract {
 
             await ctx.putState(key, Buffer.from(JSON.stringify(donation)));
         }
-
-        //TODO: need to ensure we include a timestamp in the transaction
 
         console.info('============= END : addDonation ===========');
     }
@@ -110,13 +108,14 @@ class ManageDonations extends Contract {
      * Increment the amount by the donated amount
      */
     incrementDonation(currentAmount, amountToIncrement){
-        return Number(currentAmount) + Number(amountToIncrement);
+       //TODO: add validation
+       return Number(currentAmount) + Number(amountToIncrement);
     }
 
     /*
-     * Determine if the donation value returned indicates that the associated key exists
+     * Determine if the donation value returned indicates that the associated key is valid
      */
-    keyExists(donationAsBytes){
+    isKeyValid(donationAsBytes){
         if (!donationAsBytes || donationAsBytes.length === 0) {
             return false;
         }
@@ -139,13 +138,11 @@ class ManageDonations extends Contract {
     /*
      * Create the donation value object to use in ledger transaction
      */
-    //TODO: come up with better function name
     createDonationValueObject(projectName, itemType, amount){
         //NOTE: no validation added here given that the chaincode author defines the key elements
 
         var lastDonationTimeInMilliseconds = Date.now();
 
-        //TODO: use 'const' here?
         var donation =  {
             docType: 'donation',
             projectName,
@@ -174,5 +171,4 @@ class ManageDonations extends Contract {
 
 }
 
-//TODO: is this and why is this required?
 module.exports = ManageDonations;
