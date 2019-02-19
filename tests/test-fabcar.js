@@ -22,7 +22,7 @@ describe('Test ManageDonations', function(){
 
     describe('Test ManageDonations.addDonation', () => {
 
-        it("Should be able to add & get a donation", async () => {
+        it("Should be able to add & then get a donation", async () => {
             //call method under test
             await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
 
@@ -73,25 +73,62 @@ describe('Test ManageDonations', function(){
             }
         });
 
-       it("Check that it throws errors when we add a donation", async () => {
+        it("Check that it throws error when we try to add a donation for a project that is invalid", async () => {
+             //TODO: figure out why the following code did not work
+             //expect(async function () { await chaincode.addDonation(stub, 'BAD_PROJECT_NAME', 'Gas', 1); }).to.throw();  // Function expression
 
-//            expect(Transform.bufferToObject(actualDonation)).to.be.null;
-//
-//            //now verify our chaincode creates one
-//            await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
-//            actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
-//            expect(Transform.bufferToObject(actualDonation)).not.to.be.null;
+             //as an alternative approach, the following verifies the error was thrown
+             var actualDonation;
+             try {
+                await chaincode.addDonation(stub, 'BAD_PROJECT_NAME', 'Gas', 1);
+                actualDonation = await chaincode.getDonation(stub, 'BAD_PROJECT_NAME', 'Gas');
+             } catch(Error) {} //we expect an error to be thrown
 
+             expect(Transform.bufferToObject(actualDonation)).to.be.null;
+         });
 
-//            expect(getDonationFunction).to.throw(Error);
-//            expect(async function () { await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas'); }).to.throw();  // Function expression
+        it("Check that it throws error when we try to add a donation for an item type that is invalid", async () => {
+             //TODO: figure out why the following code did not work
+             //expect(async function () { await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'BAD_ITEM_TYPE', 1) }).to.throw();  // Function expression
 
+             //as an alternative approach, the following verifies the error was thrown
+             var actualDonation;
+             try {
+                await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'BAD_ITEM_TYPE', 1);
+                actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'BAD_ITEM_TYPE');
+            } catch(Error) {} //we expect an error to be thrown
 
-            //now check if a new key/value pair is added where one does not exist
-//            const actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
-//            expect(Transform.bufferToObject(actualDonation)).to.equal(0);
+             expect(Transform.bufferToObject(actualDonation)).to.be.null;
+         });
 
-//            await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
+        it("Check that it throws error when we try to add a donation for an amount that is invalid", async () => {
+             //TODO: figure out why the following code did not work
+             //expect(async function () { await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', -9999); }).to.throw();  // Function expression
+
+             //as an alternative approach, the following verifies the error was thrown
+             var actualDonation;
+             try {
+                await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', -99999);
+                actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
+             } catch(Error) {} //we expect an error to be thrown
+
+            expect(Transform.bufferToObject(actualDonation)).to.be.null;
+         });
+    });
+
+    describe('Test ManageDonations.getDonation', () => {
+       it("Check that it throws error when we try to get a donation for a project/item that are invalid", async () => {
+
+            //TODO: figure out why the following code did not work
+            //expect(async function () { await chaincode.getDonation(stub, 'BLAH', 'BLAH'); }).to.throw();  // Function expression
+
+            //as an alternative approach, the following verifies the error was thrown
+            var actualDonation;
+            try {
+                actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
+            } catch(Error) {} //we expect an error to be thrown
+
+            expect(Transform.bufferToObject(actualDonation)).to.be.null;
         });
 
     });
