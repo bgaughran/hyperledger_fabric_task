@@ -57,10 +57,24 @@ describe('Test ManageDonations', function(){
 
         it("Should add a key/value donation record where one did not exist before", async () => {
 
-//            expect(async function () { await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas'); }).to.throw();  // Function expression
-
             //verify the key does not exist
-//            const actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
+            var actualDonation;
+            try {
+                actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
+            } catch(Error){ //we expect an error to be thrown
+                expect(Transform.bufferToObject(actualDonation)).to.be.null
+
+                //now add it
+                await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
+                //now get it and check it exists
+                actualDonation = await chaincode.getDonation(stub, 'DisasterServicesCorporation', 'Gas');
+                expect(Transform.bufferToObject(actualDonation)).not.to.be.null;
+
+            }
+        });
+
+       it("Check that it throws errors when we add a donation", async () => {
+
 //            expect(Transform.bufferToObject(actualDonation)).to.be.null;
 //
 //            //now verify our chaincode creates one
@@ -78,7 +92,6 @@ describe('Test ManageDonations', function(){
 //            expect(Transform.bufferToObject(actualDonation)).to.equal(0);
 
 //            await chaincode.addDonation(stub, 'DisasterServicesCorporation', 'Gas', 1);
-
         });
 
     });
