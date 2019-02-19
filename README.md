@@ -98,6 +98,10 @@ fabric-shim stub [from this GitHub repository](https://github.com/wearetheledger
 - run `mocha tests/test-fabcar.js`
 TODO: show output of the tests here
 
+## Future improvements
+- in the chaincode, as an improvement, it might be useful in the future to use the `createCompositeKey` function
+ to allow each the `project` & `itemType` to be independently searchable
+
 ## Built With
 TODO:....
 * [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
