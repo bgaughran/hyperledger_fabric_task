@@ -80,7 +80,7 @@ These instructions will get you  the project up and running on your local machin
 - `docker network prune` - clears any cached networks
 - `docker rmi dev-peer0.org1.example.com-fabcar-1.0-5c906e402ed29f20260ae42283216aa75549c571e2e380f3615826365d8269ba` - clears out old chaincode
 - `cd ../fabcar`
-- `./startFabric.sh  javascript`- starts our Blockchain network and install and instantiate a NodeJS/GoLang version of the FabCar smart contract which will be used by our application to access the ledger
+- `./startFabric.sh`- starts our Blockchain network and installs and instantiates a NodeJS version of the FabCar smart contract which will be used by our application to access the ledger
 - `npm install` (in directory with package.json)
 - `npm install grpc@1.14.2`  (in directory with package.json)
 - `docker logs -f ca.example.com` - this creates a log of our Certificate authority example (logs requests and responses to the cert authority)
@@ -92,7 +92,6 @@ These instructions will get you  the project up and running on your local machin
 - open a terminal to tail the logs of the chaincode installed in your docker image
     `docker ps` shows thew docker instances. Choose the ID running your chaincode, eg: `af7cd027a5f2`
     `docker logs af7cd027a5f -f` will tail the logs
-- run `cd fabcar/javascript`
 - run `node query.js` to show an empty ledger at the start
 - run `node invoke.js` to add a donation
 - run `node query.js` to show the updated ledger
